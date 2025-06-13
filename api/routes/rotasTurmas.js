@@ -2,10 +2,10 @@ import { BD } from '../db.js';
 
 class rotasTurmas {
     static async novaTurma(req, res) {
-        const { nome } = req.body;
+        const { nome_turma } = req.body;
 
         try {
-            const turma = await BD.query('INSERT INTO turmas (nome) VALUES ($1) RETURNING *', [nome]);
+            const turma = await BD.query('INSERT INTO turmas (nome_turma) VALUES ($1) RETURNING *', [nome_turma]);
             res.status(201).json(turma.rows[0]);
         } catch (error) {
             console.error('Erro ao criar turma', error);
@@ -14,10 +14,10 @@ class rotasTurmas {
     }
     static async atualizarTurma(req, res) {
         const { id } = req.params;
-        const { nome } = req.body;
+        const { nome_turma } = req.body;
 
         try{
-            const turma = await BD.query('UPDATE turmas SET nome = $1 WHERE id_turma = $2 RETURNING *', [nome, id]);
+            const turma = await BD.query('UPDATE turmas SET nome_turma = $1 WHERE id_turma = $2 RETURNING *', [nome_turma, id]);
             res.status(200).json(turma.rows[0]);
         } catch (error) {
             res.status(500).json({ error: 'Erro ao atualizar turma', error: error.message });
@@ -25,15 +25,15 @@ class rotasTurmas {
     }
     static async atualizar(req, res) {
         const { id } = req.params;
-        const { nome,ativo } = req.body;
+        const { nome_turma, ativo } = req.body;
 
         try {
             const campos = [];
             const valores = [];
 
-            if (nome !== undefined) {
-                campos.push(`nome = $${valores.length + 1}`);
-                valores.push(nome);
+            if (nome_turma !== undefined) {
+                campos.push(`nome_turma = $${valores.length + 1}`);
+                valores.push(nome_turma);
             }
 
             if (ativo !== undefined) {

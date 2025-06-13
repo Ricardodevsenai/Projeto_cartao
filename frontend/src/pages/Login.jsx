@@ -45,18 +45,49 @@ export default function Login() {
   }
 
   return (
-    <div className='body'>
+    <div className="body">
       <div className="login-container">
         <div className="welcome-section">
-          <h1 style={{ color: "white" }}>Bem-Vindo!</h1>
-          <p style={{ color: "white", fontSize: 17 }}>
-            Bem vindo ao site de gerenciamento de alunos automático.
-          </p>
+          <div>
+            <h1 style={{ color: "white" }}>Bem-Vindo!</h1>
+            <p style={{ color: "white" }}>
+              Bem vindo ao site de gerenciamento escolar.
+            </p>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              padding: "20px",
+              gap: "10px",
+            }}
+          >
+            <img
+              src="https://sesirs.iev.com.br/uploads/companies/8572/VDxChWKBicbkEnsc4FvVaPtiPRUIFY0WP7HR09Lg.png"
+              alt=""
+              style={{
+                width: 150,
+                height: "auto",
+                borderRadius: "10px",
+              }}
+            />
+            <img
+              src="https://www.ielrs.org.br/sites/default/files/logos/logos_senai_branco.png"
+              alt=""
+              style={{
+                width: 190,
+                height: "auto",
+                borderRadius: "10px",
+              }}
+            />
+          </div>
           {/* <button className="learn-more-btn">Learn More</button> */}
         </div>
 
         <div className="login-box">
-          <h2 style={{color: 'black', fontWeight: 'bold'}}>Login</h2>
+          <h2 style={{ color: "black", fontWeight: "bold" }}>Login</h2>
           <form>
             <label>Email</label>
             <input
@@ -69,9 +100,14 @@ export default function Login() {
               type="password"
               onChange={(e) => setSenha(e.target.value)}
               placeholder="●●●●●●●●"
+              style={{ color: "black" }}
             />
-            <button className="submit-btn" onClick={botaoEntrar}>
-              Submit
+            <button
+              className="submit-btn"
+              style={{ marginTop: 30 }}
+              onClick={botaoEntrar}
+            >
+              Entrar
             </button>
           </form>
           <div className="social-icons">

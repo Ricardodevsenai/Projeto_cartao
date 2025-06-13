@@ -20,9 +20,6 @@ port:5432,
 })
 
 
-
-
-
 const testarConexao = async () => {
     try {
         const cliente = await BD.connect();//tenta estabelece a conexão com o banco de dados

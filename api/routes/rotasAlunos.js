@@ -24,7 +24,7 @@ class rotasAlunos{
 
      static async listarTodos(req, res){
         try{
-            const alunos = await BD.query('SELECT alunos.nome, alunos.idade, alunos.email, alunos.cpf, alunos.sexo, alunos.cartao,alunos.ativo,turmas.nome_turma FROM alunos INNER JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true');
+            const alunos = await BD.query('SELECT alunos.nome, alunos.idade, alunos.email, alunos.cpf, alunos.sexo, alunos.cartao, alunos.ativo, turmas.nome_turma FROM alunos INNER JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true');
             return res.status(200).json(alunos.rows);
         }catch(error){
             res.status(500).json({message: 'Erro ao listar alunos', error: error});

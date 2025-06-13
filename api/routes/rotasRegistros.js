@@ -84,7 +84,7 @@ class rotasRegistros {
     static async editar(req, res) {
         const { id } = req.params;
     
-        const { hora, id_aluno, tipo } = req.body;
+        const { hora, id_aluno, tipo, cartao } = req.body;
         
         try {
           //inicializar arrays(vetores) para armazenar os campos e valores a serem atualizados

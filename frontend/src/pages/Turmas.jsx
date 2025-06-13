@@ -1,11 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaGraduationCap, FaHome, FaDoorOpen, FaPlus, FaSearch } from "react-icons/fa";
+import {
+  FaGraduationCap,
+  FaHome,
+  FaDoorOpen,
+  FaPlus,
+  FaSearch,
+} from "react-icons/fa";
 import { MdPeopleAlt } from "react-icons/md";
 import Estilos from "../styles/Estilos";
 
-export default function Alunos() {
+export default function Turmas() {
   return (
     <div
       style={{
@@ -15,7 +21,7 @@ export default function Alunos() {
         backgroundColor: "#4b0082",
       }}
     >
-      {/* Sidebar */}
+      {/* Sidebar FORA da div principal */}
       <div
         style={{
           display: "flex",
@@ -23,7 +29,7 @@ export default function Alunos() {
           padding: "20px 0",
           alignItems: "center",
           width: "100px",
-          backgroundColor: "#4b0082",
+          backgroundColor: "#4b0082", // roxo escuro sólido
         }}
       >
         <img
@@ -84,13 +90,57 @@ export default function Alunos() {
             border: "2px solid #a074f8",
           }}
         >
-          <h2 style={{ marginBottom: "30px", color: "#4b0082" }}>Alunos</h2>
+          <h2 style={{ marginBottom: "30px", color: "#4b0082" }}>Turmas</h2>
+
+          {/* Cards
+          <div style={{ display: "flex", gap: "20px", marginBottom: "30px" }}>
+            <div
+              style={{
+                flex: 1,
+                backgroundColor: "#f4ebfa",
+                padding: "20px",
+                borderRadius: "15px",
+              }}
+            >
+              <h4 style={{ color: "#4b0082" }}>Usuários</h4>
+              <p style={{ color: "#4b0082" }}>128 cadastrados</p>
+            </div>
+            <div
+              style={{
+                flex: 1,
+                backgroundColor: "#f4ebfa",
+                padding: "20px",
+                borderRadius: "15px",
+              }}
+            >
+              <h4 style={{ color: "#4b0082" }}>Cursos</h4>
+              <p style={{ color: "#4b0082" }}>24 disponíveis</p>
+            </div>
+            <div
+              style={{
+                flex: 1,
+                backgroundColor: "#f4ebfa",
+                padding: "20px",
+                borderRadius: "15px",
+              }}
+            >
+              <h4 style={{ color: "#4b0082" }}>Alertas</h4>
+              <p style={{ color: "#4b0082" }}>5 pendentes</p>
+            </div>
+          </div> */}
 
           {/* Div de pesquisa */}
-          <div style={{ display: "flex", gap: 10, marginBottom: 20, alignItems: "center", justifyContent: "center" }}>
-            {/* Botão adicionar com Link */}
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              marginBottom: 20,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <div style={{ marginRight: 100 }}>
-              <Link to="/alunos/CadAlunos">
+              <Link to="/turmas/CadTurmas">
                 <button
                   style={{
                     backgroundColor: "#934FA5",
@@ -123,9 +173,9 @@ export default function Alunos() {
             >
               <input
                 type="text"
-                placeholder="Busque um aluno"
+                placeholder="Busque uma turma"
                 style={{
-                  width: "50%",
+                  width: "50%", // Ajuste do tamanho
                   padding: "10px 15px",
                   borderRadius: 10,
                   border: "none",
@@ -150,10 +200,8 @@ export default function Alunos() {
                 <FaSearch size={18} />
               </button>
               <select style={Estilos.dropdown}>
-                <option value="">Turma 1 </option>
-                <option value="">Turma 2 </option>
-                <option value="">Turma 3 </option>
-                <option value="">Turma 4 </option>
+                <option value="">Ordenar</option>
+                <option value="">Faltas</option>
               </select>
               <select style={Estilos.dropdown}>
                 <option value="">Ativo</option>
@@ -163,59 +211,22 @@ export default function Alunos() {
           </div>
 
           {/* Tabela */}
-          <h5 style={{ color: "#4b0082" }}>Tabelas de Alunos</h5>
+          <h5 style={{ color: "#4b0082" }}>Tabela de Turmas</h5>
           <table className="table table-hover">
             <thead>
               <tr>
-                <th scope="col">Data</th>
-                <th scope="col">Nome</th>
-                <th scope="col">CPF</th>
-                <th scope="col">Email</th>
-                <th scope="col">Idade</th>
-                <th scope="col">Cartão</th>
                 <th scope="col">Turma</th>
-                <th scope="col">Ações</th>
+                <th scope="col">Qntd. Aluno</th>
               </tr>
             </thead>
             <tbody className="table-group-divider">
               <tr>
-                <td>08/05/2025</td>
-                <td>Pedro Santos</td>
-                <td>382872647</td>
-                <td>PS@gmail.com</td>
-                <td>17</td>
-                <td>1ju65</td>
-                <td>3º EM A</td>
-                <td className="d-flex">
-                  <a
-                    href=""
-                    style={{
-                      marginRight: 10,
-                      backgroundColor: "#00CD66",
-                      borderRadius: 10,
-                      padding: 10,
-                      color: "white",
-                      textDecoration: "none",
-                    }}
-                  >
-                    Editar
-                  </a>
-                  <form action="">
-                    <button
-                      type="submit"
-                      style={{
-                        marginRight: 10,
-                        backgroundColor: "#EE3B3B",
-                        borderRadius: 10,
-                        padding: 10,
-                        color: "white",
-                        border: "none",
-                      }}
-                    >
-                      Inativar
-                    </button>
-                  </form>
-                </td>
+                <td>Turma 1</td>
+                <td>32</td>
+              </tr>
+              <tr>
+                <td>Turma 2</td>
+                <td>32</td>
               </tr>
             </tbody>
           </table>

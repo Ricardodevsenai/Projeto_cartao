@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 const SECRET_KEY = "chave_api_gfp";
 class rotasUsuarios {
   static async novoUsuario(req, res) {
-    const { nome, email, senha } = req.body;
+    const { nome, email, senha,tipo_acesso } = req.body;
 
     const saltRounds = 10;
 
@@ -15,9 +15,9 @@ class rotasUsuarios {
       // insert into usuarios (nome, email, senha, tipo_acesso) values ($1, $2, $3, $4, $5)`,
       //  [nome, email, senhaCri+ptografada,tipo_acesso]);
 
-      const query = `insert into usuarios (nome, email, senha) values ($1, $2, $3)`;
+      const query = `insert into usuarios (nome, email, senha, tipo_acesso) values ($1, $2, $3,$4)`;
 
-      const valores = [nome, email, senhaCriptografada];
+      const valores = [nome, email, senhaCriptografada,tipo_acesso];
       const resposta = await BD.query(query, valores);
 
       res.status(201).json("usuario cadastrado");
