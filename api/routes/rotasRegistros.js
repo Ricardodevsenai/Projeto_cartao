@@ -119,6 +119,7 @@ class rotasRegistros {
           const usuarios = await BD.query(query, valores);
           //verifica se o usuario foi atualizado
     
+          
           if (usuarios.rows.length === 0) {
             return res.status(404).json({ message: `registro não encontrado` });
           }

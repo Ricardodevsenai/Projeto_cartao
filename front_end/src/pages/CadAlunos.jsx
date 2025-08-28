@@ -11,7 +11,6 @@ import {
   MdAccountBalance,
   MdEmail,
   MdFeaturedPlayList,
-  MdAttachMoney,
   MdAutoGraph,
   MdClose,
   MdSave,

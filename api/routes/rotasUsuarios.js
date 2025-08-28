@@ -171,6 +171,7 @@ class rotasUsuarios {
           .json({ message: "nenhum campo fornecido para atualização" });
       }
 
+      
       const query = `update usuarios set  ${campos.join(
         ","
       )} where id_usuario = ${id} RETURNING *`;

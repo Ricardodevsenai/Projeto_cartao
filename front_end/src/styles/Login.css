@@ -56,7 +56,7 @@
     255,
     255,
     0.05
-  ); /* Fundo branco semi-transparente */
+  ); /* Fundo semi-transparente */
   backdrop-filter: blur(5px); /* Suaviza o fundo atrás */
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;

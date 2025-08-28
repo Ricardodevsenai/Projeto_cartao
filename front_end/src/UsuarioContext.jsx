@@ -3,6 +3,7 @@ import {useState, useEffect, createContext, useContext} from 'react';
 export const UsuarioContext = createContext();
 
 
+
 export const UsuarioProvider = ({children}) => {
     const [dadosUsuario, setDadosUsuario] = useState(null);
     const [carregando, setCarregando] = useState(true);

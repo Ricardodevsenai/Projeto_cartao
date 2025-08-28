@@ -4,6 +4,7 @@ class rotasTurmas {
     static async novaTurma(req, res) {
         const { nome_turma } = req.body;
 
+        
         try {
             const turma = await BD.query('INSERT INTO turmas (nome_turma) VALUES ($1) RETURNING *', [nome_turma]);
             res.status(201).json(turma.rows[0]);

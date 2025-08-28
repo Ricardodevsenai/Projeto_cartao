@@ -35,6 +35,7 @@ class rotasAlunos{
 
     static async deletar(req, res){
         const { id } = req.params;
+        
         try{
             const aluno = await BD.query(
                 'UPDATE alunos set ativo = false WHERE id_aluno = $1', [id]);

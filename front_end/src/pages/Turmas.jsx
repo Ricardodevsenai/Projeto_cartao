@@ -11,7 +11,7 @@ import {
   MdAccountBalance,
   MdEmail,
   MdFeaturedPlayList,
-  MdAttachMoney,
+
   MdAutoGraph,
 } from "react-icons/md";
 

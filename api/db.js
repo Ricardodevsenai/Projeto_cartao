@@ -16,6 +16,7 @@ user:'postgres',
 host:'localhost',
 database:'cartao',
 password:'admin',
+
 port:5432,
 })
 

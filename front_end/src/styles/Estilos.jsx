@@ -3,7 +3,7 @@ export const corSecundaria = "#706ef9";
 export const corTextos = "#f2f2f2";
 export const corFundo = "#0d0d0d";
 export const corFundo2 = "#262626";
-
+const corBorda = "#333333";
 const Estilos = {
   conteudo: {
     flex: 1,

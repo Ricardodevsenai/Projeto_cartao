@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Import icons (using react-icons as an example)
 // You might need to install it: npm install react-icons
-import { MdEmail, MdLock, MdVisibility, MdVisibilityOff, MdBarChart, MdNotifications, MdTrendingUp } from 'react-icons/md';
+import {  MdLock, MdVisibility, MdVisibilityOff, MdBarChart, MdNotifications, MdTrendingUp } from 'react-icons/md';
 import { useEffect } from 'react';
 
 

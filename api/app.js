@@ -8,6 +8,7 @@ import rotasAlunos from "./routes/rotasAlunos.js";
 import rotasTurmas from "./routes/rotasTurmas.js";
 import rotasRegistros from "./routes/rotasRegistros.js";
 
+
 import swaggerSpec from "./swagger.js";
 import swaggerUi from "swagger-ui-express";
 
