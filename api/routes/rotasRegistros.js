@@ -19,7 +19,7 @@ class rotasRegistros {
     static async listarRegistros(req, res) {
         try {
           const resposta = await BD.query(
-            `SELECT r. *, a.nome AS nome_aluno FROM registros AS r 
+            `SELECT r. *, a.nome AS nome FROM registros AS r 
                     LEFT JOIN alunos a ON r.id_aluno = a.id_aluno
               ORDER BY r.id_registro`
 

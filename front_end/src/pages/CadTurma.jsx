@@ -4,7 +4,6 @@ import { enderecoServidor } from "../utils.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import Estilos from "../styles/Estilos.jsx";
 import {
-
   MdEdit,
   MdDelete,
   MdCreditCard,

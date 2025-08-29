@@ -21,9 +21,10 @@ export default function CadAlunos() {
     useContext(UsuarioContext);
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
-  const [email, setEmail] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [sexo, setSexo] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [cpf, setCpf] = useState("");
+  const [rm, setRm] = useState("");
+  const [sexo, setSexo] = useState("MASCULINO");
   const [id_turma, setID_TURMA] = useState("");
   const [cartao, setCartao] = useState("");
   const [dadosLista, setDadosLista] = useState([]);
@@ -33,11 +34,32 @@ export default function CadAlunos() {
   const itemAlterar = location?.state?.itemAlterar || null;
 
   useEffect(() => {
+    // Buscar turmas cadastradas
+    const buscarTurmas = async () => {
+      try {
+        const resposta = await fetch(`${enderecoServidor}/turmas`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${dadosUsuario.token}`,
+          },
+        });
+        const dados = await resposta.json();
+        setDadosLista(dados); // Salva as turmas no estado
+      } catch (error) {
+        console.error("Erro ao buscar turmas:", error);
+      }
+    };
+    if (dadosUsuario && !carregando) {
+      buscarTurmas();
+    }
+  }, [dadosUsuario, carregando]);
+
+  useEffect(() => {
     if (itemAlterar) {
       setNome(itemAlterar.nome);
       setIdade(itemAlterar.idade);
-      setEmail(itemAlterar.email);
-      setCpf(itemAlterar.cpf);
+      // setEmail(itemAlterar.email);
+      setRm(itemAlterar.rm);
       setSexo(itemAlterar.sexo);
       setID_TURMA(itemAlterar.id_turma);
       setCartao(itemAlterar.cartao);
@@ -51,10 +73,11 @@ export default function CadAlunos() {
     const dados = {
       nome: nome,
       idade: idade,
-      email: email,
-      cpf: cpf,
+      // email: email,
+      // cpf: cpf,
+      rm: rm,
       sexo: sexo,
-      id_turma:  parseInt(id_turma),
+      id_turma: parseInt(id_turma),
       cartao: cartao,
       ativo: true,
     };
@@ -84,7 +107,7 @@ export default function CadAlunos() {
   };
   return (
     <div className="flex justify-center py-6 px-4">
-      <section className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg text-gray-800">
+      <section className="w-full  max-w-lg bg-white p-8 rounded-lg shadow-lg text-gray-800">
         {/* cabeçalho */}
         <header className="flex items-center gap-2 mb-6 border-b border-gray-200 pb-4">
           <MdCreditCard className="text-cyan-600 h-8 w-8" />
@@ -102,20 +125,28 @@ export default function CadAlunos() {
             placeholder="EX: Carlos Silva"
             className={Estilos.inputCadastro}
           />
-          <label className={Estilos.labelCadastro}>Email</label>
+          {/* <label className={Estilos.labelCadastro}>Email</label>
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="EX: Carlossilva@gmail.com"
             className={Estilos.inputCadastro}
-          />
-          <label className={Estilos.labelCadastro}>CPF</label>
+          /> */}
+          {/* <label className={Estilos.labelCadastro}>CPF</label>
           <input
             type="text"
             value={cpf}
             onChange={(e) => setCpf(e.target.value)}
-            placeholder="EX: 000.000.000-00"
+            placeholder="EX: 000000000-00"
+            className={Estilos.inputCadastro}
+          /> */}
+          <label className={Estilos.labelCadastro}>RM</label>
+          <input
+            type="text"
+            value={rm}
+            onChange={(e) => setRm(e.target.value)}
+            placeholder="EX: 2332"
             className={Estilos.inputCadastro}
           />
           <label className={Estilos.labelCadastro}>Cartão</label>
@@ -133,18 +164,29 @@ export default function CadAlunos() {
             onChange={(e) => setIdade(e.target.value)}
             className={Estilos.inputCadastro}
           />
-          <label className={Estilos.labelCadastro}>Genêro</label>
-          <select value={sexo} onChange={(e) => setSexo(e.target.value)}>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
+
+          <label className={Estilos.labelCadastro}>Gênero</label>
+          <select
+            value={sexo}
+            onChange={(e) => setSexo(e.target.value)}
+            className={Estilos.inputCadastro}
+          >
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMININO">Feminino</option>
           </select>
+
           <label className={Estilos.labelCadastro}>Turma</label>
           <select
-            value={id_turma}
+            value={String(id_turma)}
             onChange={(e) => setID_TURMA(e.target.value)}
+            className={Estilos.inputCadastro}
           >
-            <option value= "5">1A</option>
-            <option value="4">2A</option>
+            <option value="">Selecione</option>
+            {dadosLista.map((turma) => (
+              <option key={turma.id_turma} value={turma.id_turma}>
+                {turma.nome_turma}
+              </option>
+            ))}
           </select>
           <div className="flex justify-end gap-3 mt-8">
             {/* Botões de controle */}

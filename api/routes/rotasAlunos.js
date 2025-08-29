@@ -4,13 +4,13 @@ import jwt from 'jsonwebtoken'
 
 class rotasAlunos{
     static async novoAluno(req, res){
-        const {nome, idade, email, cpf, sexo, cartao, id_turma } = req.body;
+        const {nome, idade, email, cpf, sexo, cartao, rm, id_turma } = req.body;
 
         try{
             const aluno = await BD.query(`
-                INSERT INTO alunos(nome, idade, email, cpf, sexo, cartao, id_turma)
-                VALUES($1, $2, $3, $4, $5, $6, $7)
-                `, [nome, idade, email, cpf, sexo, cartao, id_turma])
+                INSERT INTO alunos(nome, idade, email, cpf, sexo, cartao, rm, id_turma)
+                VALUES($1, $2, $3, $4, $5, $6, $7,$8)
+                `, [nome, idade, email, cpf, sexo, cartao, rm, id_turma])
 
             res.status(201).json({message: 'Aluno Cadastrado'})
         }catch(error){
@@ -24,7 +24,15 @@ class rotasAlunos{
 
      static async listarTodos(req, res){
         try{
-            const alunos = await BD.query('SELECT alunos.nome, alunos.idade, alunos.email, alunos.cpf, alunos.sexo, alunos.cartao, alunos.ativo, turmas.nome_turma FROM alunos INNER JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true');
+            const alunos = await BD.query('SELECT alunos.id_aluno, alunos.nome, alunos.idade, alunos.email, alunos.sexo, alunos.cartao, alunos.rm, alunos.ativo, alunos.id_turma, turmas.nome_turma FROM alunos INNER JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true ORDER BY alunos.nome');
+            return res.status(200).json(alunos.rows);
+        }catch(error){
+            res.status(500).json({message: 'Erro ao listar alunos', error: error});
+        }
+    }
+     static async quantidade(req, res){
+        try{
+            const alunos = await BD.query('SELECT count(*) from alunos');
             return res.status(200).json(alunos.rows);
         }catch(error){
             res.status(500).json({message: 'Erro ao listar alunos', error: error});
@@ -50,22 +58,22 @@ class rotasAlunos{
     static async consultaPorId(req, res){
         const { id } = req.params;
         try{
-            const aluno = await BD.query('SELECT alunos.nome, alunos.idade, alunos.email, alunos.cpf, alunos.sexo, alunos.cartao,alunos.ativo,turmas.nome_turma FROM alunos INNER JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true and id_aluno = $1 ', [id])
+            const aluno = await BD.query('SELECT alunos.nome, alunos.idade, alunos.email, alunos.cpf, alunos.sexo, alunos.cartao,alunos.rm,alunos.ativo,turmas.nome_turma FROM alunos INNER JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true and id_aluno = $1 ', [id])
             res.status(200).json(aluno.rows[0]);
         }catch(error){
             res.status(500).json({message: 'Erro ao consultar o aluno', error: error});
         }
         
     }
-
+ 
     static async editarTodos(req, res){
         const { id } = req.params;
-        const { nome, idade, email, cpf, sexo, cartao, id_turma } = req.body;
+        const { nome, idade, email, cpf, sexo, cartao, rm, id_turma } = req.body;
 
         try {
             const aluno = await BD.query(
-                'UPDATE alunos SET nome = $1, idade = $2, email = $3, cpf = $4, sexo = $5, cartao = $6, id_turma = $7 WHERE id_aluno = $8 RETURNING *',
-                [nome, idade, email, cpf, sexo, cartao, id_turma, id]
+                'UPDATE alunos SET nome = $1, idade = $2, email = $3, cpf = $4, sexo = $5, cartao = $6, rm =$7, id_turma = $8 WHERE id_aluno = $9 RETURNING *',
+                [nome, idade, email, cpf, sexo, cartao ,rm, id_turma, id]
             );
 
             return res.status(200).json({ message: "Aluno atualizado com sucesso", aluno: aluno.rows[0] });
@@ -79,7 +87,7 @@ class rotasAlunos{
 
     static async editar(req, res){
         const { id } = req.params;
-        const { nome, idade, email, cpf, sexo, cartao, ativo, id_turma} = req.body;
+        const { nome, idade, email, cpf, sexo, cartao, ativo,rm, id_turma} = req.body;
         try{
             //Inicializar arrays(vetores) para armazenar os campos e valores a serem atualizados
             const campos = [];
@@ -109,6 +117,10 @@ class rotasAlunos{
             if(cartao !== undefined){
                 campos.push(`cartao = $${valores.length + 1}`) //Usa o tamanho do array para determinar o campo
                 valores.push(cartao);
+            }
+            if(rm !== undefined){
+                campos.push(`rm = $${valores.length + 1}`) //Usa o tamanho do array para determinar o campo
+                valores.push(rm);
             }
             if(ativo !== undefined){
                 campos.push(`ativo = $${valores.length + 1}`) //Usa o tamanho do array para determinar o campo
