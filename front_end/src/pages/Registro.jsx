@@ -13,7 +13,7 @@ import {
   MdAutoGraph,
 } from "react-icons/md";
 
-export default function Alunos() {
+export default function registros() {
   const { dadosUsuario, setDadosUsuario, carregando } =
     useContext(UsuarioContext);
   const [dadosLista, setDadosLista] = useState([]);
@@ -62,15 +62,6 @@ export default function Alunos() {
     }
   }, [dadosUsuario]);
 
-  const turmasUnicas = [
-    ...new Set(dadosLista.map((item) => item.nome_turma).filter(Boolean)),
-  ];
-
-  const registrosFiltrados =
-    turmaSelecionada === "todas"
-      ? dadosLista
-      : dadosLista.filter((item) => item.nome_turma === turmaSelecionada);
-
 
   const exibirItemLista = (item) => {
     return (
@@ -114,18 +105,7 @@ export default function Alunos() {
   };
   return (
     <div>
-      <select
-        className="bg-indigo-400 text-white px-4 py-2 rounded-lg border-2 border-indigo-500 hover:scale-105 duration-300 shadow-sm cursor-pointer mb-4"
-        value={turmaSelecionada}
-        onChange={(e) => setTurmaSelecionada(e.target.value)}
-      >
-        <option value="todas">Todas as turmas</option>
-        {turmasUnicas.map((turma, idx) => (
-          <option key={idx} value={turma}>
-            {turma}
-          </option>
-        ))}
-      </select>
+ 
       <section className="bg-white  rounded-3xl p-4 shadow-md">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-bold text-indigo-800">

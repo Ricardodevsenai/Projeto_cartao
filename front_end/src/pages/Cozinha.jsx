@@ -2,10 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import { UsuarioContext } from "../UsuarioContext.jsx";
 import { enderecoServidor } from "../utils.jsx";
 
-export default function Inspetores() {
+export default function Cozinha() {
   const [dadosRegistros, setDadosRegistros] = useState([]);
   const [dadosTurmas, setDadosTurmas] = useState([]);
   const [presentesTurmas, setPresentesTurmas] = useState([]);
+  const [alunosRestricao, setAlunosRestricao] = useState([]);
   const { dadosUsuario } = useContext(UsuarioContext);
 
   // Buscar registros dos alunos
@@ -59,58 +60,36 @@ export default function Inspetores() {
     }
   };
 
+  // Buscar alunos com restrição alimentar
+const  buscarAlunosRestricaoAPI = async () => {
+    try {
+      const resposta = await fetch(`${enderecoServidor}/alunos/restricoes`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${dadosUsuario.token}`,
+        },
+      });
+      const dados = await resposta.json();
+      setPresentesTurmas(Array.isArray(dados) ? dados : []);
+    } catch (error) {
+      setPresentesTurmas([]);
+      console.error("Erro ao buscar alunos com restrição:", error);
+    }
+  };
+
   useEffect(() => {
     if (dadosUsuario) {
       const buscarTudo = () => {
         buscarRegistrosAPI();
         buscarTurmasAPI();
         buscarPresentesTurmasAPI();
+        buscarAlunosRestricaoAPI();
       };
       buscarTudo();
       const intervalo = setInterval(buscarTudo, 5000);
       return () => clearInterval(intervalo);
     }
   }, [dadosUsuario]);
-
-  // Exibir resumo das turmas
-  const exibirResumoTurmas = () => (
-    <div className="mb-6">
-      <h4 className="text-lg font-bold text-indigo-700 mb-2">
-        Quantidade de alunos por turma:
-      </h4>
-      <ul>
-        {dadosTurmas.map((turma) => {
-          const presentes = presentesTurmas.find(
-            (p) => p.id_turma === turma.id_turma
-          );
-          return (
-            <li key={turma.id_turma} className="text-gray-700 mb-1">
-              <span className="font-semibold">{turma.nome_turma}:</span>{" "}
-              {turma.quantidade_alunos} aluno(s)
-              <span className="ml-4 text-green-600 font-semibold">
-                Presentes: {presentes ? presentes.presentes_hoje : 0}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-
-  // Exibir cada registro
-  const exibirItemRegistro = (item) => (
-    <div
-      key={item.id_registro}
-      className="bg-gray-100 rounded-xl p-3 mb-2 shadow"
-    >
-      <p className="font-bold text-gray-800">{item.nome}</p>
-      <p className="text-gray-500 text-sm">
-        Horário: {item.hora ? new Date(item.hora).toLocaleString("pt-BR") : ""}
-      </p>
-      <p className="text-gray-500 text-sm">Tipo: {item.tipo}</p>
-      <p className="text-gray-500 text-sm">Cartão: {item.cartao}</p>
-    </div>
-  );
 
   // Função para verificar se o registro é do dia atual
   const ehDoDiaAtual = (dataRegistro) => {
@@ -147,50 +126,68 @@ export default function Inspetores() {
     return !saidaDoMesmoAluno;
   });
 
+  // Filtrar alunos com restrição alimentar que estão presentes
+  const alunosRestricaoPresentes = alunosRestricao.filter((aluno) =>
+    alunosPresentes.some((presente) => presente.id_aluno === aluno.id_aluno)
+  );
+
+  // Exibir resumo das turmas
+  const exibirResumoTurmas = () => (
+    <div className="mb-6">
+      <h4 className="text-lg font-bold text-indigo-700 mb-2">
+        Quantidade de alunos por turma:
+      </h4>
+      <ul>
+        {dadosTurmas.map((turma) => {
+          const presentes = presentesTurmas.find(
+            (p) => p.id_turma === turma.id_turma
+          );
+          return (
+            <li key={turma.id_turma} className="text-gray-700 mb-1">
+              <span className="font-semibold">{turma.nome_turma}:</span>{" "}
+              {turma.quantidade_alunos} aluno(s)
+              <span className="ml-4 text-green-600 font-semibold">
+                Presentes: {presentes ? presentes.presentes_hoje : 0}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+
+  // Exibir alunos com restrição alimentar presentes
+  const exibirAlunosRestricaoPresentes = () => (
+    <div>
+      <h4 className="text-lg font-bold text-indigo-700 mb-2">
+        Alunos presentes com restrição alimentar:
+      </h4>
+      {alunosRestricaoPresentes.length > 0 ? (
+        <ul>
+          {alunosRestricaoPresentes.map((aluno) => (
+            <li key={aluno.id_aluno} className="bg-yellow-100 rounded-xl p-3 mb-2 shadow">
+              <p className="font-bold text-gray-800">{aluno.nome_aluno}</p>
+              <p className="text-gray-500 text-sm">
+                Turma: {aluno.nome_turma}
+              </p>
+              <p className="text-red-700 text-sm font-semibold">
+                Restrição: {aluno.restricao}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">Nenhum aluno presente com restrição alimentar.</p>
+      )}
+    </div>
+  );
+
   return (
     <div>
       <section className="bg-white rounded-3xl p-4 shadow-md">
-        <h3 className="text-2xl font-bold text-indigo-800 mb-4">Inspetores</h3>
+        <h3 className="text-2xl font-bold text-indigo-800 mb-4">Cozinha</h3>
         {exibirResumoTurmas()}
-        <h4 className="text-lg font-bold text-indigo-700 mb-2">
-          Registros dos alunos:
-        </h4>
-        <div className="flex gap-8">
-          <section className="flex-1">
-            <h5 className="text-md font-bold text-green-700 mb-2">Entradas</h5>
-            <div className="max-h-[75vh] ocultar-scroll overflow-y-auto pr-2">
-              {registrosEntrada.length > 0 ? (
-                registrosEntrada.map((item) => exibirItemRegistro(item))
-              ) : (
-                <p className="text-gray-500">Nenhuma entrada encontrada.</p>
-              )}
-            </div>
-          </section>
-          <section className="flex-1">
-            <h5 className="text-md font-bold text-red-700 mb-2">Saídas</h5>
-            <div className="max-h-[75vh] ocultar-scroll overflow-y-auto pr-2">
-              {registrosSaida.length > 0 ? (
-                registrosSaida.map((item) => exibirItemRegistro(item))
-              ) : (
-                <p className="text-gray-500">Nenhuma saída encontrada.</p>
-              )}
-            </div>
-          </section>
-          <section className="flex-1">
-            <h5 className="text-md font-bold text-blue-700 mb-2">
-              Presentes agora
-            </h5>
-            <div className="max-h-[75vh] ocultar-scroll overflow-y-auto pr-2">
-              {alunosPresentes.length > 0 ? (
-                alunosPresentes.map((item) => exibirItemRegistro(item))
-              ) : (
-                <p className="text-gray-500">
-                  Nenhum aluno presente no momento.
-                </p>
-              )}
-            </div>
-          </section>
-        </div>
+        {exibirAlunosRestricaoPresentes()}
       </section>
     </div>
   );

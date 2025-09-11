@@ -27,6 +27,7 @@ export default function CadAlunos() {
   const [sexo, setSexo] = useState("MASCULINO");
   const [id_turma, setID_TURMA] = useState("");
   const [cartao, setCartao] = useState("");
+  const [restricao, setRestricao] = useState("");
   const [dadosLista, setDadosLista] = useState([]);
 
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ export default function CadAlunos() {
       setSexo(itemAlterar.sexo);
       setID_TURMA(itemAlterar.id_turma);
       setCartao(itemAlterar.cartao);
+      setRestricao(itemAlterar.restricao);
     }
   }, [itemAlterar]);
   const botaoSalvar = async () => {
@@ -79,6 +81,7 @@ export default function CadAlunos() {
       sexo: sexo,
       id_turma: parseInt(id_turma),
       cartao: cartao,
+      restricao: restricao,
       ativo: true,
     };
     try {
@@ -188,6 +191,14 @@ export default function CadAlunos() {
               </option>
             ))}
           </select>
+              <label className={Estilos.labelCadastro}>Restricao Alimentar</label>
+          <input
+            type="text"
+            value={restricao}
+            onChange={(e) => setRestricao(e.target.value)}
+            placeholder="EX: Não posso comer glúten"
+            className={Estilos.inputCadastro}
+          />
           <div className="flex justify-end gap-3 mt-8">
             {/* Botões de controle */}
             <button

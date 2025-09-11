@@ -125,5 +125,36 @@ class rotasTurmas {
         .json({ error: "Erro ao listar turma", error: error.message });
     }
   }
+  static async quantidadePresentesPorTurma(req, res) {
+    try {
+      const resultado = await BD.query(`
+   SELECT 
+    turmas.id_turma,
+    turmas.nome_turma,
+    COUNT(DISTINCT alunos.id_aluno) AS presentes_hoje
+FROM turmas
+LEFT JOIN alunos ON alunos.id_turma = turmas.id_turma
+LEFT JOIN registros AS r_entrada 
+  ON r_entrada.id_aluno = alunos.id_aluno
+  AND r_entrada.tipo = 'ENTRADA'
+  AND DATE(r_entrada.hora) = CURRENT_DATE
+LEFT JOIN registros AS r_saida
+  ON r_saida.id_aluno = alunos.id_aluno
+  AND r_saida.tipo = 'SAIDA'
+  AND DATE(r_saida.hora) = CURRENT_DATE
+  AND r_saida.hora > r_entrada.hora
+WHERE (turmas.ativo IS NULL OR turmas.ativo = true)
+  AND r_entrada.id_registro IS NOT NULL
+  AND r_saida.id_registro IS NULL
+GROUP BY turmas.id_turma, turmas.nome_turma
+ORDER BY turmas.id_turma;
+    `);
+      res.status(200).json(resultado.rows);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: "Erro ao buscar presentes", error: error.message });
+    }
+  }
 }
 export default rotasTurmas;

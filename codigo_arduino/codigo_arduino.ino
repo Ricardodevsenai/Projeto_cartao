@@ -2,7 +2,9 @@
 #include <HTTPClient.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <LiquidCrystal_I2C.h>
 
+LiquidCrystal_I2C lcd(0x27, 16,2);
 #define SS_PIN 5    // Pino SDA conectado ao GPIO 5 do ESP32
 #define RST_PIN 22  // Pino RST conectado ao GPIO 22 do ESP32
 
@@ -20,13 +22,16 @@ const char* serverCadastro = "http://192.168.0.228:3000/presenca";
 const char* serverLeitura = "http://192.168.0.228:3000/presenca";
 
 void setup() {
+   Serial.begin(115200);      // Inicializa a comunicação serial
   pinMode(ledAzul, OUTPUT);
   pinMode(ledVerde, OUTPUT);
   pinMode(ledVermelha, OUTPUT);
   pinMode(buzzer, OUTPUT);
   pinMode(botao, INPUT_PULLUP);
+  lcd.init();
+lcd.backlight();
 
-  Serial.begin(115200);      // Inicializa a comunicação serial
+ 
   SPI.begin(18, 19, 23, 5);  // SCK=18, MISO=19, MOSI=23, SS=5 (SPI com ESP32)
   mfrc522.PCD_Init();        // Inicializa o RC522
   Serial.println("Aproxime um cartão RFID...");
@@ -69,6 +74,12 @@ void loop() {
   }
   Serial.print("UID do Cartão: ");
   Serial.println(uid);
+  
+  lcd.clear();
+lcd.setCursor(0, 0);
+lcd.print("Cartao Lido:");
+lcd.setCursor(0, 1);
+lcd.print(uid);
 
   tone(buzzer, 1000, 500);
 

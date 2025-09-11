@@ -29,6 +29,7 @@ import Alunos from "./Alunos.jsx";
 import Dashboard from "./Dashboard.jsx";
 import Registros from "./Registro.jsx";
 import Inspetores from "./Inspetores.jsx";
+import Cozinha from "./Cozinha.jsx";
 
 export default function Principal() {
   const { dadosUsuario, setDadosUsuario, carregando } =
@@ -155,6 +156,20 @@ export default function Principal() {
               <span className="font-medium md:hidden lg:block">Inspetores</span>
             </Link>
           </div>
+          <div className="px-4 lg:px-6 mb-2">
+            <Link
+              to="/cozinha"
+              onClick={() => setMenuAberto(false)}
+              className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                location.pathname === "/cozinha"
+                  ? "bg-purple-600 text-white shadow-md"
+                  : " hover:bg-purple-900"
+              }`}
+            >
+              <MdPeopleAlt className="w-8 h-8" />
+              <span className="font-medium md:hidden lg:block">Cozinha</span>
+            </Link>
+          </div>
         </nav>
 
         <div className="border-t border-gray-700 pt-4 ">
@@ -209,6 +224,7 @@ export default function Principal() {
             <Route path="/cadalunos" element={<CadAlunos />} />
             <Route path="/registros" element={<Registros />} />
             <Route path="/inspetores" element={<Inspetores />} />
+            <Route path="/cozinha" element={<Cozinha />} />
           </Routes>
         </main>
       </section>

@@ -82,6 +82,7 @@ export default function Alunos() {
             <p className="text-gray-500 text-sm">RM: {item.rm}</p>
             <p className="text-gray-500 text-sm">Turma: {item.nome_turma}</p>
             <p className="text-gray-500 text-sm">Cartão: {item.cartao}</p>
+            <p className="text-gray-500 text-sm">Restrição: {item.restricao}</p>
           </div>
         </div>
 

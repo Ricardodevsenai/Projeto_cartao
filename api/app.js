@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { testarConexao, BD } from "./db.js";
 
-
 import rotasUsuarios, { autenticarToken } from "./routes/rotasUsuarios.js";
 import rotasAlunos from "./routes/rotasAlunos.js";
 import rotasTurmas from "./routes/rotasTurmas.js";
@@ -51,12 +50,14 @@ app.post("/alunos", autenticarToken, rotasAlunos.novoAluno);
 app.delete("/alunos/:id", autenticarToken, rotasAlunos.deletar);
 app.get("/alunos/:id", autenticarToken, rotasAlunos.consultaPorId);
 app.get("/alunos", autenticarToken, rotasAlunos.listarTodos);
-app.get("/alunos", rotasAlunos.quantidade);
+app.get("/alunos/quantidade", rotasAlunos.quantidade);
 app.put("/alunos/:id", autenticarToken, rotasAlunos.editarTodos);
 app.patch("/alunos/:id", autenticarToken, rotasAlunos.editar);
+app.get('/alunos/restricoes', autenticarToken,rotasAlunos.listarRestricao);
 
 //Rotas Turmas
 app.post("/turmas", autenticarToken, rotasTurmas.novaTurma);
+app.get( "/turmas/presentes", autenticarToken, rotasTurmas.quantidadePresentesPorTurma);
 app.get("/turmas", autenticarToken, rotasTurmas.listarTurmas);
 app.get("/turmas/:id", autenticarToken, rotasTurmas.listarTurmaPorId);
 app.put("/turmas/:id", autenticarToken, rotasTurmas.atualizarTurma);

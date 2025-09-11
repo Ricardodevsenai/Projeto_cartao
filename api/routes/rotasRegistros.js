@@ -21,7 +21,7 @@ class rotasRegistros {
           const resposta = await BD.query(
             `SELECT r. *, a.nome AS nome FROM registros AS r 
                     LEFT JOIN alunos a ON r.id_aluno = a.id_aluno
-              ORDER BY r.id_registro`
+              ORDER BY a.nome`
 
           );
           return res.status(200).json(resposta.rows);
