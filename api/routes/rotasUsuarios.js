@@ -96,8 +96,8 @@ class rotasUsuarios {
 
     try {
       const resultado = await BD.query(
-        `SELECT * FROM usuarios WHERE email = $1 AND ativo = true`,
-        [email]
+        `SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND ativo = true`,
+        [email,senha]
       );
       if (resultado.rows.length === 0) {
         return res.status(401).json({ message: "Email ou senha inválidos" });
