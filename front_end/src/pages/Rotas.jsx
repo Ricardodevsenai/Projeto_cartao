@@ -21,6 +21,7 @@ import {
   MdOutlineLocalOffer,
   MdPeople,
   MdMenu,
+  MdFoodBank,
 } from "react-icons/md";
 import Turmas from "./Turmas.jsx";
 import CadTurmas from "./CadTurma.jsx";
@@ -166,7 +167,7 @@ export default function Principal() {
                   : " hover:bg-purple-900"
               }`}
             >
-              <MdPeopleAlt className="w-8 h-8" />
+              <MdFoodBank className="w-8 h-8" />
               <span className="font-medium md:hidden lg:block">Cozinha</span>
             </Link>
           </div>

@@ -26,36 +26,38 @@ class rotasAlunos {
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  static async listarRestricao(req, res) {
-    try {
-      const resultado = await BD.query(`
- SELECT 
+static async listarRestricao(req, res) {
+  try {
+    const resultado = await BD.query(`
+   SELECT 
     turmas.id_turma,
     turmas.nome_turma,
     alunos.id_aluno,
     alunos.nome,
     alunos.restricao
-FROM alunos
-INNER JOIN turmas ON alunos.id_turma = turmas.id_turma
-WHERE alunos.ativo = true
-  AND alunos.restricao != ''
-ORDER BY alunos.nome;
-`);
+  FROM alunos
+  LEFT JOIN turmas ON alunos.id_turma = turmas.id_turma
+  WHERE alunos.ativo = true
+    AND alunos.restricao IS NOT NULL
+    or alunos.restricao != ''
+  ORDER BY alunos.nome;
+    `);
 
-      res.status(200).json(resultado.rows);
-    } catch (error) {
-      console.error("Erro ao listar alunos com restrição", error);
-      res
-        .status(500)
-        .json({ message: "Erro ao listar restrições", error: error.message });
-    }
+    res.status(200).json(Array.isArray(resultado.rows) ? resultado.rows : []);
+  } catch (error) {
+    console.error("Erro detalhado:", error);
+    res.status(500).json({
+      message: "Erro ao listar restrições",
+    });
   }
+}
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   static async listarTodos(req, res) {
     try {
       const alunos = await BD.query(
-        "SELECT alunos.id_aluno, alunos.nome, alunos.idade, alunos.email, alunos.sexo, alunos.cartao, alunos.rm, alunos.ativo, alunos.id_turma, turmas.nome_turma, alunos.restricao FROM alunos INNER JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true ORDER BY alunos.nome"
+        "SELECT alunos.id_aluno, alunos.nome, alunos.idade, alunos.email, alunos.sexo, alunos.cartao, alunos.rm, alunos.ativo, alunos.id_turma, turmas.nome_turma, alunos.restricao FROM alunos inner JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true ORDER BY alunos.nome"
       );
       return res.status(200).json(alunos.rows);
     } catch (error) {

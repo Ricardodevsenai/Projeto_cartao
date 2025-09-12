@@ -9,6 +9,21 @@ export default function Cozinha() {
   const [alunosRestricao, setAlunosRestricao] = useState([]);
   const { dadosUsuario } = useContext(UsuarioContext);
 
+    const buscarAlunosRestricaoAPI = async () => {
+    try {
+      const resposta = await fetch(`${enderecoServidor}/alunos/alimento`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${dadosUsuario.token}`,
+        },
+      });
+      const dados = await resposta.json();
+      setAlunosRestricao(Array.isArray(dados) ? dados : []);
+    } catch (error) {
+      setAlunosRestricao([]);
+      console.error("Erro ao buscar alunos com restrição:", error);
+    }
+  };
   // Buscar registros dos alunos
   const buscarRegistrosAPI = async () => {
     try {
@@ -61,35 +76,6 @@ export default function Cozinha() {
   };
 
   // Buscar alunos com restrição alimentar
-const  buscarAlunosRestricaoAPI = async () => {
-    try {
-      const resposta = await fetch(`${enderecoServidor}/alunos/restricoes`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${dadosUsuario.token}`,
-        },
-      });
-      const dados = await resposta.json();
-      setPresentesTurmas(Array.isArray(dados) ? dados : []);
-    } catch (error) {
-      setPresentesTurmas([]);
-      console.error("Erro ao buscar alunos com restrição:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (dadosUsuario) {
-      const buscarTudo = () => {
-        buscarRegistrosAPI();
-        buscarTurmasAPI();
-        buscarPresentesTurmasAPI();
-        buscarAlunosRestricaoAPI();
-      };
-      buscarTudo();
-      const intervalo = setInterval(buscarTudo, 5000);
-      return () => clearInterval(intervalo);
-    }
-  }, [dadosUsuario]);
 
   // Função para verificar se o registro é do dia atual
   const ehDoDiaAtual = (dataRegistro) => {
@@ -112,25 +98,33 @@ const  buscarAlunosRestricaoAPI = async () => {
   const registrosEntrada = registrosDoDia.filter(
     (item) => item.tipo === "ENTRADA"
   );
-  const registrosSaida = registrosDoDia.filter(
-    (item) => item.tipo === "SAIDA"
-  );
+  const registrosSaida = registrosDoDia.filter((item) => item.tipo === "SAIDA");
 
-  // Determinar quem está presente: entrou mas não saiu depois
-  const alunosPresentes = registrosEntrada.filter((entrada) => {
-    const saidaDoMesmoAluno = registrosSaida.find(
-      (saida) =>
-        saida.id_aluno === entrada.id_aluno &&
-        new Date(saida.hora) > new Date(entrada.hora)
-    );
-    return !saidaDoMesmoAluno;
-  });
+ // Determinar quem está presente: entrou mas não saiu depois
+const alunosPresentes = registrosEntrada.filter(entrada =>
+  !registrosSaida.some(saida =>
+    saida.id_aluno == entrada.id_aluno &&
+    new Date(saida.hora) > new Date(entrada.hora)
+  )
+);
 
   // Filtrar alunos com restrição alimentar que estão presentes
   const alunosRestricaoPresentes = alunosRestricao.filter((aluno) =>
-    alunosPresentes.some((presente) => presente.id_aluno === aluno.id_aluno)
+    alunosPresentes.some((presente) => presente.id_aluno == aluno.id_aluno)
   );
-
+ useEffect(() => {
+    if (dadosUsuario) {
+      const buscarTudo = () => {
+        buscarRegistrosAPI();
+        buscarTurmasAPI();
+        buscarPresentesTurmasAPI();
+        buscarAlunosRestricaoAPI();
+      };
+      buscarTudo();
+      const intervalo = setInterval(buscarTudo, 5000);
+      return () => clearInterval(intervalo);
+    }
+  }, [dadosUsuario]);
   // Exibir resumo das turmas
   const exibirResumoTurmas = () => (
     <div className="mb-6">
@@ -165,11 +159,12 @@ const  buscarAlunosRestricaoAPI = async () => {
       {alunosRestricaoPresentes.length > 0 ? (
         <ul>
           {alunosRestricaoPresentes.map((aluno) => (
-            <li key={aluno.id_aluno} className="bg-yellow-100 rounded-xl p-3 mb-2 shadow">
-              <p className="font-bold text-gray-800">{aluno.nome_aluno}</p>
-              <p className="text-gray-500 text-sm">
-                Turma: {aluno.nome_turma}
-              </p>
+            <li
+              key={aluno.id_aluno}
+              className="bg-yellow-100 rounded-xl p-3 mb-2 shadow"
+            >
+              <p className="font-bold text-gray-800">{aluno.nome}</p>
+              <p className="text-gray-500 text-sm">Turma: {aluno.nome_turma}</p>
               <p className="text-red-700 text-sm font-semibold">
                 Restrição: {aluno.restricao}
               </p>
@@ -177,11 +172,16 @@ const  buscarAlunosRestricaoAPI = async () => {
           ))}
         </ul>
       ) : (
-        <p className="text-gray-500">Nenhum aluno presente com restrição alimentar.</p>
+        <p className="text-gray-500">
+          Nenhum aluno presente com restrição alimentar.
+        </p>
       )}
     </div>
   );
 
+ 
+
+  
   return (
     <div>
       <section className="bg-white rounded-3xl p-4 shadow-md">

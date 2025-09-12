@@ -46,6 +46,7 @@ app.delete("/usuarios/:id", autenticarToken, rotasUsuarios.deletarUsuarios);
 app.patch("/usuarios/:id", autenticarToken, rotasUsuarios.editar);
 
 //Rotas Alunos
+app.get('/alunos/alimento', autenticarToken,rotasAlunos.listarRestricao);
 app.post("/alunos", autenticarToken, rotasAlunos.novoAluno);
 app.delete("/alunos/:id", autenticarToken, rotasAlunos.deletar);
 app.get("/alunos/:id", autenticarToken, rotasAlunos.consultaPorId);
@@ -53,7 +54,7 @@ app.get("/alunos", autenticarToken, rotasAlunos.listarTodos);
 app.get("/alunos/quantidade", rotasAlunos.quantidade);
 app.put("/alunos/:id", autenticarToken, rotasAlunos.editarTodos);
 app.patch("/alunos/:id", autenticarToken, rotasAlunos.editar);
-app.get('/alunos/restricoes', autenticarToken,rotasAlunos.listarRestricao);
+
 
 //Rotas Turmas
 app.post("/turmas", autenticarToken, rotasTurmas.novaTurma);

@@ -94,30 +94,33 @@ class rotasUsuarios {
   static async login(req, res) {
     const { email, senha } = req.body;
 
-    try {
-      const resultado = await BD.query(
-        `SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND ativo = true`,
-        [email,senha]
-      );
-      if (resultado.rows.length === 0) {
-        return res.status(401).json({ message: "Email ou senha inválidos" });
-      }
-      const usuario = resultado.rows[0];
-      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+    
+  try {
+    // Busca só pelo email
+    const resultado = await BD.query(
+      `SELECT * FROM usuarios WHERE email = $1 AND ativo = true`,
+      [email]
+    );
+    if (resultado.rows.length === 0) {
+      return res.status(401).json({ message: "Email ou senha inválidos" });
+    }
+    const usuario = resultado.rows[0];
+    // Compara a senha digitada com a senha criptografada
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
-      if (!senhaValida) {
-        return res.status(401).json("Email ou senha inválidos");
-      }
-      //gerar um novo token para o usuario
-      const token = jwt.sign(
-        {
-          id_usuario: usuario.id_usuario,
-          nome: usuario.nome,
-          email: usuario.email,
-        },
-        SECRET_KEY,
-        { expiresIn: "1h" }
-      );
+    if (!senhaValida) {
+      return res.status(401).json({ message: "Email ou senha inválidos" });
+    }
+    //gerar um novo token para o usuario
+    const token = jwt.sign(
+      {
+        id_usuario: usuario.id_usuario,
+        nome: usuario.nome,
+        email: usuario.email,
+      },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
 
       return res
         .status(200)
