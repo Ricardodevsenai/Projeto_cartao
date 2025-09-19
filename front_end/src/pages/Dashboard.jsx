@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaGraduationCap, FaHome, FaDoorOpen } from "react-icons/fa";
 import { MdPeopleAlt } from "react-icons/md";
+
+import { enderecoServidor } from "../utils.jsx";
+
 // import "bootstrap/dist/css/bootstrap.min.css";
 import {
   BarChart,
@@ -17,26 +20,69 @@ import {
   Legend,
 } from "recharts";
 import "../styles/Principal.css";
+import { UsuarioContext } from "../UsuarioContext.jsx";
 
 export default function Dashboard() {
-  const usuariosPorCurso = [
-    { name: "7º Ano A", alunos: 15 },
-    { name: "7º Ano B", alunos: 30 },
-    { name: "8º Ano A", alunos: 28 },
-    { name: "8º Ano B", alunos: 24 },
-    { name: "9º Ano A", alunos: 20 },
-    { name: "9º Ano B", alunos: 32 },
-    { name: "1º EM A", alunos: 17 },
-    { name: "1º EM B", alunos: 10 },
-    { name: "2º EM A", alunos: 17 },
-    { name: "2º EM B", alunos: 10 },
-    { name: "3º EM A", alunos: 17 },
-    { name: "3º EM B", alunos: 10 },
-  ];
+  const [totalAlunos, setTotalAlunos] = useState(0);
+  const [presentes, setPresentes] = useState(0);
+  const [ausentes, setAusentes] = useState(0);
+  const [usuariosPorCurso, setUsuariosPorCurso] = useState([]);
+  const { dadosUsuario } = useContext(UsuarioContext);
+
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        console.log("Token enviado:", dadosUsuario?.token);
+        const res = await fetch(`${enderecoServidor}/alunos`, {
+          headers: {
+            Authorization: `Bearer ${dadosUsuario?.token}`,
+          },
+        });
+
+        const dados = await res.json();
+        console.log("Resposta da API:", dados);
+
+        if (Array.isArray(dados) && dados.length > 0) {
+          setTotalAlunos(dados[0].total_alunos);
+        }
+        // Se precisar, pode salvar também os alunos
+        // setUsuariosPorCurso(dados[0].alunos);
+      } catch (err) {
+        console.error("Erro ao carregar dashboard", err);
+      }
+    }
+    carregarDados();
+  }, [dadosUsuario]);
+
+  useEffect(() => {
+    async function carregarDados2() {
+      try {
+        console.log("Token enviado:", dadosUsuario?.token);
+        const res = await fetch(`${enderecoServidor}/registros`, {
+          headers: {
+            Authorization: `Bearer ${dadosUsuario?.token}`,
+          },
+        });
+
+        const dados = await res.json();
+        console.log("Resposta da API:", dados);
+
+        // Aqui a resposta é um objeto, não array
+        setPresentes(Number(dados.total_entradas) || 0);
+        setAusentes(Number(dados.total_saidas) || 0);
+
+        // Se quiser, pode guardar os registros também
+        // setUsuariosPorCurso(dados.registros);
+      } catch (err) {
+        console.error("Erro ao carregar dashboard", err);
+      }
+    }
+    carregarDados2();
+  }, [dadosUsuario]);
 
   const alertasPorTipo = [
-    { name: "Ausentes", value: 27 },
-    { name: "Presentes", value: 389 },
+    { name: "Ausentes", value: ausentes },
+    { name: "Presentes", value: presentes },
   ];
 
   const COLORS = ["#4b0082", "#8e2de2", "#a074f8"];
@@ -46,8 +92,7 @@ export default function Dashboard() {
     <div className="w-full bg-[#4b0082] justify-center items-center overflow-hidden">
       {/* Conteúdo principal */}
       <div className="flex-1 bg-[#8e2de2] p-4 md:p-8">
-        <div
-          className="ocultar-scroll h-[84vh] overflow-y-auto bg-white rounded-3xl border-2 border-[#a074f8] p-6 md:p-10">
+        <div className="ocultar-scroll h-[84vh] overflow-y-auto bg-white rounded-3xl border-2 border-[#a074f8] p-6 md:p-10">
           <h2 className="text-[#4b0082] mb-8 text-2xl md:text-3xl font-semibold">
             Principal
           </h2>
@@ -56,15 +101,15 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <div className="bg-[#f4ebfa] p-4 rounded-xl">
               <h4 className="text-[#4b0082]">Total de Alunos</h4>
-              <p className="text-[#4b0082]">416 Alunos</p>
+              <p className="text-[#4b0082]">{totalAlunos} Alunos</p>
             </div>
             <div className="bg-[#f4ebfa] p-4 rounded-xl">
               <h4 className="text-[#4b0082]">Total de Alunos Presentes</h4>
-              <p className="text-[#4b0082]">389 Alunos</p>
+              <p className="text-[#4b0082]">{presentes} presentes</p>
             </div>
             <div className="bg-[#f4ebfa] p-4 rounded-xl">
               <h4 className="text-[#4b0082]">Total de Alunos Ausentes</h4>
-              <p className="text-[#4b0082]">27 Alunos</p>
+              <p className="text-[#4b0082]">{ausentes} ausentes</p>
             </div>
           </div>
 
@@ -132,7 +177,10 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={usuariosPorCurso}>
                 <CartesianGrid stroke="#ccc" strokeDasharray="2 4" />
-                <XAxis dataKey="name" tick={{ fill: "#4b0082", fontSize: 12 }} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: "#4b0082", fontSize: 12 }}
+                />
                 <YAxis tick={{ fill: "#4b0082", fontSize: 12 }} />
                 <Tooltip
                   contentStyle={{

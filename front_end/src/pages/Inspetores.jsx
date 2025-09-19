@@ -133,9 +133,7 @@ export default function Inspetores() {
   const registrosEntrada = registrosDoDia.filter(
     (item) => item.tipo === "ENTRADA"
   );
-  const registrosSaida = registrosDoDia.filter(
-    (item) => item.tipo === "SAIDA"
-  );
+  const registrosSaida = registrosDoDia.filter((item) => item.tipo === "SAIDA");
 
   // Determinar quem está presente: entrou mas não saiu depois
   const alunosPresentes = registrosEntrada.filter((entrada) => {

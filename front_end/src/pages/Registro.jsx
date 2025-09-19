@@ -62,7 +62,6 @@ export default function registros() {
     }
   }, [dadosUsuario]);
 
-
   const exibirItemLista = (item) => {
     return (
       <div key={item.id} className={Estilos.linhaListagem}>
@@ -104,17 +103,16 @@ export default function registros() {
     );
   };
   return (
-    <div>
- 
-      <section className="bg-white  rounded-3xl p-4 shadow-md">
-        <div className="flex justify-between items-center mb-4">
+    <div className="p-6 bg-gray-100 h-auto rounded-3xl">
+      <section>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
           <h3 className="text-2xl font-bold text-indigo-800">
             {" "}
             Gerenciar Registros
           </h3>
         </div>
         {/* lista das Alunos cadastradas */}
-        <section className="max-h-[75vh] ocultar-scroll overflow-y-auto pr-2">
+        <section className="max-h-[75vh] overflow-y-auto pr-2 ocultar-scroll grid grid-cols-1 md:grid-cols-2 gap-2">
           {dadosLista.map((item) => exibirItemLista(item))}
         </section>
       </section>

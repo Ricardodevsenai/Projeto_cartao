@@ -1,6 +1,6 @@
 import { BD } from "../db.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
 class rotasAlunos {
   static async novoAluno(req, res) {
@@ -26,9 +26,9 @@ class rotasAlunos {
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static async listarRestricao(req, res) {
-  try {
-    const resultado = await BD.query(`
+  static async listarRestricao(req, res) {
+    try {
+      const resultado = await BD.query(`
    SELECT 
     turmas.id_turma,
     turmas.nome_turma,
@@ -43,35 +43,60 @@ static async listarRestricao(req, res) {
   ORDER BY alunos.nome;
     `);
 
-    res.status(200).json(Array.isArray(resultado.rows) ? resultado.rows : []);
-  } catch (error) {
-    console.error("Erro detalhado:", error);
-    res.status(500).json({
-      message: "Erro ao listar restrições",
-    });
+      res.status(200).json(Array.isArray(resultado.rows) ? resultado.rows : []);
+    } catch (error) {
+      console.error("Erro detalhado:", error);
+      res.status(500).json({
+        message: "Erro ao listar restrições",
+      });
+    }
   }
-}
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   static async listarTodos(req, res) {
     try {
       const alunos = await BD.query(
-        "SELECT alunos.id_aluno, alunos.nome, alunos.idade, alunos.email, alunos.sexo, alunos.cartao, alunos.rm, alunos.ativo, alunos.id_turma, turmas.nome_turma, alunos.restricao FROM alunos inner JOIN turmas ON alunos.id_turma = turmas.id_turma WHERE alunos.ativo = true ORDER BY alunos.nome"
+              `WITH lista AS (
+          SELECT
+              alunos.id_aluno,
+              alunos.nome,
+              alunos.idade,
+              alunos.email,
+              alunos.sexo,
+              alunos.cartao,
+              alunos.rm,
+              alunos.ativo,
+              alunos.id_turma,
+              turmas.nome_turma,
+              alunos.restricao
+          FROM alunos
+          INNER JOIN turmas ON alunos.id_turma = turmas.id_turma
+          WHERE alunos.ativo = true
+          ORDER BY alunos.nome
+      )
+      SELECT
+          (SELECT COUNT(*) FROM lista) AS total_alunos,
+          json_agg(lista) AS alunos
+      FROM lista;`
       );
       return res.status(200).json(alunos.rows);
     } catch (error) {
       res.status(500).json({ message: "Erro ao listar alunos", error: error });
     }
   }
-  static async quantidade(req, res) {
-    try {
-      const alunos = await BD.query("SELECT count(*) from alunos");
-      return res.status(200).json(alunos.rows);
-    } catch (error) {
-      res.status(500).json({ message: "Erro ao listar alunos", error: error });
-    }
-  }
+
+  // static async quantidade(req, res) {
+  //   try {
+  //     const alunos = await BD.query(
+  //       "SELECT count(*)::int as quantidade FROM alunos WHERE ativo = true"
+  //     );
+  //     return res.status(200).json({ totalAlunos: alunos.rows[0].quantidade });
+  //   } catch (error) {
+  //     console.error("Erro ao listar alunos", error);
+  //     res.status(500).json({ message: "Erro ao listar alunos", error: error });
+  //   }
+  // }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -110,12 +135,13 @@ static async listarRestricao(req, res) {
 
   static async editarTodos(req, res) {
     const { id } = req.params;
-    const { nome, idade, email, cpf, sexo, cartao, rm,restricao, id_turma } = req.body;
+    const { nome, idade, email, cpf, sexo, cartao, rm, restricao, id_turma } =
+      req.body;
 
     try {
       const aluno = await BD.query(
         "UPDATE alunos SET nome = $1, idade = $2, email = $3, cpf = $4, sexo = $5, cartao = $6, rm =$7,restricao = $8 ,id_turma = $9 WHERE id_aluno = $10 RETURNING *",
-        [nome, idade, email, cpf, sexo, cartao, rm,restricao, id_turma, id]
+        [nome, idade, email, cpf, sexo, cartao, rm, restricao, id_turma, id]
       );
 
       return res.status(200).json({

@@ -9,7 +9,7 @@ export default function Cozinha() {
   const [alunosRestricao, setAlunosRestricao] = useState([]);
   const { dadosUsuario } = useContext(UsuarioContext);
 
-    const buscarAlunosRestricaoAPI = async () => {
+  const buscarAlunosRestricaoAPI = async () => {
     try {
       const resposta = await fetch(`${enderecoServidor}/alunos/alimento`, {
         method: "GET",
@@ -100,19 +100,21 @@ export default function Cozinha() {
   );
   const registrosSaida = registrosDoDia.filter((item) => item.tipo === "SAIDA");
 
- // Determinar quem está presente: entrou mas não saiu depois
-const alunosPresentes = registrosEntrada.filter(entrada =>
-  !registrosSaida.some(saida =>
-    saida.id_aluno == entrada.id_aluno &&
-    new Date(saida.hora) > new Date(entrada.hora)
-  )
-);
+  // Determinar quem está presente: entrou mas não saiu depois
+  const alunosPresentes = registrosEntrada.filter(
+    (entrada) =>
+      !registrosSaida.some(
+        (saida) =>
+          saida.id_aluno == entrada.id_aluno &&
+          new Date(saida.hora) > new Date(entrada.hora)
+      )
+  );
 
   // Filtrar alunos com restrição alimentar que estão presentes
   const alunosRestricaoPresentes = alunosRestricao.filter((aluno) =>
     alunosPresentes.some((presente) => presente.id_aluno == aluno.id_aluno)
   );
- useEffect(() => {
+  useEffect(() => {
     if (dadosUsuario) {
       const buscarTudo = () => {
         buscarRegistrosAPI();
@@ -179,9 +181,6 @@ const alunosPresentes = registrosEntrada.filter(entrada =>
     </div>
   );
 
- 
-
-  
   return (
     <div>
       <section className="bg-white rounded-3xl p-4 shadow-md">

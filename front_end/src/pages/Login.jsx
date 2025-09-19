@@ -148,6 +148,7 @@ export default function Login() {
               placeholder="●●●●●●●●"
               style={{ color: "black" }}
             />
+          
             {/* Lembrar-me + link */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-sm gap-2">
               <label className="flex items-center text-gray-600">

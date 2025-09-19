@@ -191,7 +191,7 @@ export default function CadAlunos() {
               </option>
             ))}
           </select>
-              <label className={Estilos.labelCadastro}>Restricao Alimentar</label>
+          <label className={Estilos.labelCadastro}>Restricao Alimentar</label>
           <input
             type="text"
             value={restricao}

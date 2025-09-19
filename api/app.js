@@ -7,6 +7,8 @@ import rotasUsuarios, { autenticarToken } from "./routes/rotasUsuarios.js";
 import rotasAlunos from "./routes/rotasAlunos.js";
 import rotasTurmas from "./routes/rotasTurmas.js";
 import rotasRegistros from "./routes/rotasRegistros.js";
+import rotasTurmasDisciplinas from "./routes/rotasTurmasDisciplinas.js";
+import rotasAlunosDisciplinas from "./routes/rotasAlunosDisciplinas.js";
 
 import swaggerSpec from "./swagger.js";
 import swaggerUi from "swagger-ui-express";
@@ -50,8 +52,8 @@ app.get('/alunos/alimento', autenticarToken,rotasAlunos.listarRestricao);
 app.post("/alunos", autenticarToken, rotasAlunos.novoAluno);
 app.delete("/alunos/:id", autenticarToken, rotasAlunos.deletar);
 app.get("/alunos/:id", autenticarToken, rotasAlunos.consultaPorId);
-app.get("/alunos", autenticarToken, rotasAlunos.listarTodos);
-app.get("/alunos/quantidade", rotasAlunos.quantidade);
+app.get("/alunos", rotasAlunos.listarTodos);
+// app.get("/alunos/totalAlunos", rotasAlunos.quantidade);
 app.put("/alunos/:id", autenticarToken, rotasAlunos.editarTodos);
 app.patch("/alunos/:id", autenticarToken, rotasAlunos.editar);
 
@@ -66,12 +68,20 @@ app.delete("/turmas/:id", autenticarToken, rotasTurmas.deletarTurma);
 app.patch("/turmas/:id", autenticarToken, rotasTurmas.atualizar);
 
 // Rotas Registros
-app.get("/registros", autenticarToken, rotasRegistros.listarRegistros);
+app.get("/registros",  rotasRegistros.listarRegistros);
 app.get("/registros/:id", autenticarToken, rotasRegistros.consultaPorId);
 app.post("/registros", autenticarToken, rotasRegistros.novoRegistro);
 app.delete("/registros/:id", autenticarToken, rotasRegistros.deletarRegistro);
 app.patch("/registros/:id", autenticarToken, rotasRegistros.editar);
 app.put("/registros/:id", autenticarToken, rotasRegistros.editarRegistros);
+
+// Rotas TurmasDisciplinas
+app.post("/turmas_disciplinas", autenticarToken, rotasTurmasDisciplinas.novaTurmaDisciplina);
+app.get("/turmas_disciplinas", autenticarToken, rotasTurmasDisciplinas.listarTurmasDisciplinas);
+// app.get("/turmas-disciplinas/:id", autenticarToken, rotasTurmasDisciplinas.listarTurmaDisciplinaPorId);
+app.put("/turmas_disciplinas/:id", autenticarToken, rotasTurmasDisciplinas.atualizarTurmaDisciplina);
+app.delete("/turmas_disciplinas/:id", autenticarToken, rotasTurmasDisciplinas.deletarTurmaDisciplina);
+// app.patch("/turmas-disciplinas/:id", autenticarToken, rotasTurmasDisciplinas.atualizar);
 
 // Rotas Presença
 app.post("/presenca", async (req, res) => {

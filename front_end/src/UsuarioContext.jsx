@@ -1,24 +1,24 @@
-import {useState, useEffect, createContext, useContext} from 'react';
+import { useState, useEffect, createContext, useContext } from "react";
 
 export const UsuarioContext = createContext();
 
+export const UsuarioProvider = ({ children }) => {
+  const [dadosUsuario, setDadosUsuario] = useState(null);
+  const [carregando, setCarregando] = useState(true);
 
-
-export const UsuarioProvider = ({children}) => {
-    const [dadosUsuario, setDadosUsuario] = useState(null);
-    const [carregando, setCarregando] = useState(true);
-
-useEffect(() => {
-    const usuarioLogado = localStorage.getItem('usuarioLogado');
+  useEffect(() => {
+    const usuarioLogado = localStorage.getItem("usuarioLogado");
     if (usuarioLogado) {
-        setDadosUsuario(JSON.parse(usuarioLogado));
+      setDadosUsuario(JSON.parse(usuarioLogado));
     }
     setCarregando(false);
-},[])
-   
-    return (
-        <UsuarioContext.Provider value={{ dadosUsuario,setDadosUsuario, carregando,setCarregando }}>
-            {children}
-        </UsuarioContext.Provider>
-    );
+  }, []);
+
+  return (
+    <UsuarioContext.Provider
+      value={{ dadosUsuario, setDadosUsuario, carregando, setCarregando }}
+    >
+      {children}
+    </UsuarioContext.Provider>
+  );
 };

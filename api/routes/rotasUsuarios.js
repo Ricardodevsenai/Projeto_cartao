@@ -117,6 +117,7 @@ class rotasUsuarios {
         id_usuario: usuario.id_usuario,
         nome: usuario.nome,
         email: usuario.email,
+        tipo_acesso: usuario.tipo_acesso,
       },
       SECRET_KEY,
       { expiresIn: "1h" }
@@ -124,7 +125,7 @@ class rotasUsuarios {
 
       return res
         .status(200)
-        .json({token, id_usuario: usuario.id_usuario, nome: usuario.nome, email: usuario.email});
+        .json({token, id_usuario: usuario.id_usuario, nome: usuario.nome, email: usuario.email,tipo_acesso:usuario.tipo_acesso});
       // return res.status(200).json({ message: "Login realizado com sucesso" });
     } catch (error) {
       console.error("Erro ao realizar login:", error);

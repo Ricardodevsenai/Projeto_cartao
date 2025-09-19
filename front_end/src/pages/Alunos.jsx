@@ -14,10 +14,10 @@ export default function Alunos() {
   const location = useLocation();
 
   useEffect(() => {
-  if (location.state?.turmaSelecionada) {
-    setTurmaSelecionada(location.state.turmaSelecionada);
-  }
-}, [location.state]);
+    if (location.state?.turmaSelecionada) {
+      setTurmaSelecionada(location.state.turmaSelecionada);
+    }
+  }, [location.state]);
 
   const buscarDadosAPI = async () => {
     try {
@@ -87,7 +87,7 @@ export default function Alunos() {
         </div>
 
         {/* Botões */}
-        <div className="flex flex-col space-y-2 justify-center">
+        <div className="flex flex-col space-y-2 justify-center items-center">
           <button
             className="p-2 bg-indigo-300 border-2 border-indigo-500 hover:bg-indigo-400 rounded-lg transition"
             onClick={() =>

@@ -22,7 +22,10 @@ import {
   MdPeople,
   MdMenu,
   MdFoodBank,
+  MdOutlineLocalCafe,
 } from "react-icons/md";
+import { FaUsersGear } from "react-icons/fa6";
+
 import Turmas from "./Turmas.jsx";
 import CadTurmas from "./CadTurma.jsx";
 import CadAlunos from "./CadAlunos.jsx";
@@ -31,6 +34,7 @@ import Dashboard from "./Dashboard.jsx";
 import Registros from "./Registro.jsx";
 import Inspetores from "./Inspetores.jsx";
 import Cozinha from "./Cozinha.jsx";
+import Usuarios from "./Usuarios.jsx";
 
 export default function Principal() {
   const { dadosUsuario, setDadosUsuario, carregando } =
@@ -85,92 +89,131 @@ export default function Principal() {
           </div>
         </div>
         <nav className="flex-1">
-          <div className="px-4 lg:px-6 mb-2">
-            <Link
-              to="/"
-              onClick={() => setMenuAberto(false)}
-              className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
-                location.pathname === "/"
-                  ? "bg-purple-600 text-white shadow-md"
-                  : " hover:bg-purple-900"
-              }`}
-            >
-              <MdGridView className="w-8 h-8" />
-              <span className="font-medium md:hidden lg:block">Dashboard</span>
-            </Link>
-          </div>
-          <div className="px-4 lg:px-6 mb-2">
-            <Link
-              to="/turmas"
-              onClick={() => setMenuAberto(false)}
-              className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
-                location.pathname === "/turmas"
-                  ? "bg-purple-600 text-white shadow-md"
-                  : " hover:bg-purple-900"
-              }`}
-            >
-              <MdClass className="w-8 h-8" />
-              <span className="font-medium md:hidden lg:block">Turmas</span>
-            </Link>
-          </div>
-          <div className="px-4 lg:px-6 mb-2">
-            <Link
-              to="/alunos"
-              onClick={() => setMenuAberto(false)}
-              className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
-                location.pathname === "/alunos"
-                  ? "bg-purple-600 text-white shadow-md"
-                  : " hover:bg-purple-900"
-              }`}
-            >
-              <MdGroups className="w-8 h-8" />
-              <span className="font-medium md:hidden lg:block">Alunos</span>
-            </Link>
-          </div>
+          {dadosUsuario?.tipo_acesso.trim() == "ADMINISTRADOR" && (
+            <div className="px-4 lg:px-6 mb-2">
+              <Link
+                to="/"
+                onClick={() => setMenuAberto(false)}
+                className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === "/"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : " hover:bg-purple-900"
+                }`}
+              >
+                <MdGridView className="w-8 h-8" />
+                <span className="font-medium md:hidden lg:block">
+                  Dashboard
+                </span>
+              </Link>
+            </div>
+          )}
+          {dadosUsuario?.tipo_acesso.trim() == "ADMINISTRADOR" && (
+            <div className="px-4 lg:px-6 mb-2">
+              <Link
+                to="/turmas"
+                onClick={() => setMenuAberto(false)}
+                className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === "/turmas"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : " hover:bg-purple-900"
+                }`}
+              >
+                <MdClass className="w-8 h-8" />
+                <span className="font-medium md:hidden lg:block">Turmas</span>
+              </Link>
+            </div>
+          )}
 
-          <div className="px-4 lg:px-6 mb-2">
-            <Link
-              to="/registros"
-              onClick={() => setMenuAberto(false)}
-              className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
-                location.pathname === "/registros"
-                  ? "bg-purple-600 text-white shadow-md"
-                  : " hover:bg-purple-900"
-              }`}
-            >
-              <MdDescription className="w-8 h-8" />
-              <span className="font-medium md:hidden lg:block">Registros</span>
-            </Link>
-          </div>
+          {dadosUsuario?.tipo_acesso.trim() == "ADMINISTRADOR" && (
+            <div className="px-4 lg:px-6 mb-2">
+              <Link
+                to="/alunos"
+                onClick={() => setMenuAberto(false)}
+                className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === "/alunos"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : " hover:bg-purple-900"
+                }`}
+              >
+                <MdGroups className="w-8 h-8" />
+                <span className="font-medium md:hidden lg:block">Alunos</span>
+              </Link>
+            </div>
+          )}
 
-          <div className="px-4 lg:px-6 mb-2">
-            <Link
-              to="/inspetores"
-              onClick={() => setMenuAberto(false)}
-              className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
-                location.pathname === "/inspetores"
-                  ? "bg-purple-600 text-white shadow-md"
-                  : " hover:bg-purple-900"
-              }`}
-            >
-              <MdPeopleAlt className="w-8 h-8" />
-              <span className="font-medium md:hidden lg:block">Inspetores</span>
-            </Link>
-          </div>
-          <div className="px-4 lg:px-6 mb-2">
-            <Link
-              to="/cozinha"
-              onClick={() => setMenuAberto(false)}
-              className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
-                location.pathname === "/cozinha"
-                  ? "bg-purple-600 text-white shadow-md"
-                  : " hover:bg-purple-900"
-              }`}
-            >
-              <MdFoodBank className="w-8 h-8" />
-              <span className="font-medium md:hidden lg:block">Cozinha</span>
-            </Link>
-          </div>
+          {dadosUsuario?.tipo_acesso.trim() == "ADMINISTRADOR" && (
+            <div className="px-4 lg:px-6 mb-2">
+              <Link
+                to="/registros"
+                onClick={() => setMenuAberto(false)}
+                className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === "/registros"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : " hover:bg-purple-900"
+                }`}
+              >
+                <MdDescription className="w-8 h-8" />
+                <span className="font-medium md:hidden lg:block">
+                  Registros
+                </span>
+              </Link>
+            </div>
+          )}
+
+          {dadosUsuario?.tipo_acesso.trim() == "ADMINISTRADOR" && (
+            <div className="px-4 lg:px-6 mb-2">
+              <Link
+                to="/usuarios"
+                onClick={() => setMenuAberto(false)}
+                className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === "/usuarios"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : " hover:bg-purple-900"
+                }`}
+              >
+                <FaUsersGear className="w-8 h-8" />
+                <span className="font-medium md:hidden lg:block">Usuarios</span>
+              </Link>
+            </div>
+          )}
+
+          {(dadosUsuario?.tipo_acesso.trim() == "INSPETOR" ||
+            dadosUsuario?.tipo_acesso.trim() == "ADMINISTRADOR") && (
+            <div className="px-4 lg:px-6 mb-2">
+              <Link
+                to="/inspetores"
+                onClick={() => setMenuAberto(false)}
+                className={`flex items-center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === "/inspetores"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : " hover:bg-purple-900"
+                }`}
+              >
+                <MdPeopleAlt className="w-8 h-8" />
+                <span className="font-medium md:hidden lg:block">
+                  Inspetores
+                </span>
+              </Link>
+            </div>
+          )}
+
+          {(dadosUsuario?.tipo_acesso.trim() == "COZINHA" ||
+            dadosUsuario?.tipo_acesso.trim() == "ADMINISTRADOR") && (
+            <div className="px-4 lg:px-6 mb-2">
+              <Link
+                to="/cozinha"
+                onClick={() => setMenuAberto(false)}
+                className={`flex items center gap-2 p-3 rounded-lg transition-colors duration-200 ${
+                  location.pathname === "/cozinha"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : " hover:bg-purple-900"
+                }`}
+              >
+                <MdFoodBank className="w-8 h-8" />
+                <span className="font-medium md:hidden lg:block">Cozinha</span>
+              </Link>
+            </div>
+          )}
         </nav>
 
         <div className="border-t border-gray-700 pt-4 ">
@@ -226,6 +269,7 @@ export default function Principal() {
             <Route path="/registros" element={<Registros />} />
             <Route path="/inspetores" element={<Inspetores />} />
             <Route path="/cozinha" element={<Cozinha />} />
+            <Route path="/usuarios" element={<Usuarios />} />
           </Routes>
         </main>
       </section>
