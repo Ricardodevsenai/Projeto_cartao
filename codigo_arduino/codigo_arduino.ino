@@ -6,7 +6,7 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 #define SS_PIN 5   // Pino SDA conectado ao GPIO 5 do ESP32
-#define RST_PIN 22 // Pino RST conectado ao GPIO 22 do ESP32
+#define RST_PIN 25 // Pino RST conectado ao GPIO 22 do ESP32
 
 int ledAzul = 15;
 int ledVerde = 2;
@@ -32,8 +32,8 @@ void setup()
   Wire.begin();
   lcd.init();
   lcd.backlight();
-  //lcd.setCursor(0, 0);
-  //lcd.print("Iniciando");
+  lcd.setCursor(0, 0);
+  lcd.print("Iniciando");
   delay(1000);
   SPI.begin(18, 19, 23, 5); // SCK=18, MISO=19, MOSI=23, SS=5 (SPI com ESP32)
   mfrc522.PCD_Init();       // Inicializa o RC522
